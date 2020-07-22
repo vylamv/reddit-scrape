@@ -1,11 +1,9 @@
 # import twilio client from the dependency
-from twilio.rest import Client 
+from config import client 
 
-# Twilio Account SID and Auth Token
-# client = Client("ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
 
 # send SMS text messages
-client.messages.create(to="+1xxxxxxxx",
-                        from_="xxxxxxx",
+client.messages.create(to="+xxxxxxxxx",
+                        from_="+xxxxxxxxxxx",
                         body="this is a test message")
 
