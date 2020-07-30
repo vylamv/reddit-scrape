@@ -1,26 +1,30 @@
 #! python3
+import time
 import praw
 import pandas as pd 
 import datetime as dt 
+from config import client
 
-# pip install twilio>=6.0.0
-# pip install praw
-# pip install pandas
-
-# # get config from ignored file
-from config import client 
-from config import reddit
-
-# pip install twilio>=6.0.0
-# pip install praw
-# pip install pandas
+# Getting Reddit and subreddit instances
+reddit = praw.Reddit(client_id='njDwlx3OS4B3Rg', \
+                     client_secret='xmpXiyJGpzEcjkjdJVaKcBOrUYM', \
+                     user_agent='scrape', \
+                     username='xxxx', \
+                     password='xxxx')
 
 
 subreddit = reddit.subreddit('mechmarket')
-keeb_subreddit = subreddit.new(limit=20)
+# top_subreddit = subreddit.new()
 
-for submission in subreddit.new(limit=1):
-    print(submission.title, submission.id)
+def checkReddit():
+    top_subreddit = subreddit.new(limit=50)
+    for submission in subreddit.new(limit=1):
+        if ("[h]" in submission.title.lower()):
+            print(submission.title, submission.id)
+    time.sleep(30)
+
+while True:
+    checkReddit()
 
 topics_dict = { "title":[], 
                 "score":[], 
@@ -30,7 +34,7 @@ topics_dict = { "title":[],
                 "created": [],
                 "body":[]}
 
-for submission in keeb_subreddit:
+for submission in top_subreddit:
     topics_dict["title"].append(submission.title)
     topics_dict["score"].append(submission.score)
     topics_dict["id"].append(submission.id)
@@ -39,31 +43,9 @@ for submission in keeb_subreddit:
     topics_dict["created"].append(submission.created)
     topics_dict["body"].append(submission.selftext)
 
-
 topics_data = pd.DataFrame(topics_dict)
 
-
-
-
-
 # send SMS text messages
-# client.messages.create(to="+xxxxxxxxx",
-#                         from_="+xxxxxxxxxxx",
+# client.messages.create(to="+14082058460",
+#                         from_="+12029724875",
 #                         body="this is a test message")
-
-
-
-
-
-""" config.py file 
-import praw 
-from twilio.rest import Client 
-
-client = Client("ACxxxxxxxxxxxxxx", "zzzzzzzzzzzzz")
-
-reddit = praw.Reddit(client_id='PERSONAL_USE_SCRIPT_14_CHARS', \
-                     client_secret='SECRET_KEY_27_CHARS ', \
-                     user_agent='YOUR_APP_NAME', \
-                     username='YOUR_REDDIT_USER_NAME', \
-                     password='YOUR_REDDIT_LOGIN_PASSWORD') 
-"""
