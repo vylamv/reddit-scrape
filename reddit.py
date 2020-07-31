@@ -5,6 +5,10 @@ import pandas as pd
 import datetime as dt 
 from config import client
 
+items = ["metaverse", "shoko", "e6.5", "mizu"]
+
+scanned = []
+
 # Getting Reddit and subreddit instances
 reddit = praw.Reddit(client_id='njDwlx3OS4B3Rg', \
                      client_secret='xmpXiyJGpzEcjkjdJVaKcBOrUYM', \
@@ -15,12 +19,17 @@ reddit = praw.Reddit(client_id='njDwlx3OS4B3Rg', \
 
 subreddit = reddit.subreddit('mechmarket')
 # top_subreddit = subreddit.new()
+top_subreddit = subreddit.new(limit=50)
 
 def checkReddit():
-    top_subreddit = subreddit.new(limit=50)
-    for submission in subreddit.new(limit=1):
-        if ("[h]" in submission.title.lower()):
-            print(submission.title, submission.id)
+    for submission in subreddit.new(limit=50):
+        for i in items:
+            if i in submission.title.lower() and submission.id not in scanned:
+                print(submission.title, submission.id)
+                scanned.append(submission.id)
+                client.messages.create(to="+xxxx",
+                            from_="+12029724875",
+                            body=submission.title)
     time.sleep(30)
 
 while True:
@@ -44,8 +53,3 @@ for submission in top_subreddit:
     topics_dict["body"].append(submission.selftext)
 
 topics_data = pd.DataFrame(topics_dict)
-
-# send SMS text messages
-# client.messages.create(to="+14082058460",
-#                         from_="+12029724875",
-#                         body="this is a test message")
