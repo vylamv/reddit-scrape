@@ -3,33 +3,31 @@ import time
 import praw
 import pandas as pd 
 import datetime as dt 
-from config import client
+import config
 
 items = ["metaverse", "shoko", "e6.5", "mizu"]
 
-scanned = []
-
 # Getting Reddit and subreddit instances
-reddit = praw.Reddit(client_id='njDwlx3OS4B3Rg', \
-                     client_secret='xmpXiyJGpzEcjkjdJVaKcBOrUYM', \
-                     user_agent='scrape', \
-                     username='xxxx', \
-                     password='xxxx')
+reddit = praw.Reddit(client_id = config.client_id, \
+                     client_secret = config.client_secret, \
+                     user_agent = config.user_agent, \
+                     username = config.username, \
+                     password = config.password)
 
 
 subreddit = reddit.subreddit('mechmarket')
-# top_subreddit = subreddit.new()
-top_subreddit = subreddit.new(limit=50)
+top_subreddit = subreddit.new(limit=10)
+scanned = []
 
 def checkReddit():
-    for submission in subreddit.new(limit=50):
+    for submission in subreddit.new(limit=10):
         for i in items:
             if i in submission.title.lower() and submission.id not in scanned:
                 print(submission.title, submission.id)
                 scanned.append(submission.id)
-                client.messages.create(to="+xxxx",
-                            from_="+12029724875",
-                            body=submission.title)
+                config.client.messages.create(to=config.to,
+                    from_=config.from_,
+                    body=submission.title)
     time.sleep(30)
 
 while True:
