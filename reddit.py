@@ -1,23 +1,24 @@
 #! python3
 import time
 import praw
-import pandas as pd 
-import datetime as dt 
+import pandas as pd
+import datetime as dt
 import config
 
 items = ["metaverse", "shoko", "e6.5", "mizu", "key65"]
 
 # Getting Reddit and subreddit instances
-reddit = praw.Reddit(client_id = config.client_id, \
-                     client_secret = config.client_secret, \
-                     user_agent = config.user_agent, \
-                     username = config.username, \
-                     password = config.password)
+reddit = praw.Reddit(client_id=config.client_id,
+                     client_secret=config.client_secret,
+                     user_agent=config.user_agent,
+                     username=config.username,
+                     password=config.password)
 
 
 subreddit = reddit.subreddit('mechmarket')
 top_subreddit = subreddit.new(limit=10)
 scanned = set()
+
 
 def checkReddit():
     for submission in subreddit.new(limit=10):
@@ -26,20 +27,21 @@ def checkReddit():
                 print(submission.title, submission.id)
                 scanned.add(submission.id)
                 config.client.messages.create(to=config.to,
-                    from_=config.from_,
-                    body=submission.title)
+                                              from_=config.from_,
+                                              body=submission.title)
     time.sleep(30)
+
 
 while True:
     checkReddit()
 
-topics_dict = { "title":[], 
-                "score":[], 
-                "id":[], 
-                "url":[],
-                "comms_num": [],
-                "created": [],
-                "body":[]}
+topics_dict = {"title": [],
+               "score": [],
+               "id": [],
+               "url": [],
+               "comms_num": [],
+               "created": [],
+               "body": []}
 
 for submission in top_subreddit:
     topics_dict["title"].append(submission.title)
