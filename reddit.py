@@ -5,7 +5,7 @@ import pandas as pd
 import datetime as dt 
 import config
 
-items = ["metaverse", "shoko", "e6.5", "mizu"]
+items = ["metaverse", "shoko", "e6.5", "mizu", "key65"]
 
 # Getting Reddit and subreddit instances
 reddit = praw.Reddit(client_id = config.client_id, \
@@ -17,14 +17,14 @@ reddit = praw.Reddit(client_id = config.client_id, \
 
 subreddit = reddit.subreddit('mechmarket')
 top_subreddit = subreddit.new(limit=10)
-scanned = []
+scanned = set()
 
 def checkReddit():
     for submission in subreddit.new(limit=10):
         for i in items:
             if i in submission.title.lower() and submission.id not in scanned:
                 print(submission.title, submission.id)
-                scanned.append(submission.id)
+                scanned.add(submission.id)
                 config.client.messages.create(to=config.to,
                     from_=config.from_,
                     body=submission.title)
